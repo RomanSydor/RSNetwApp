@@ -14,6 +14,7 @@ using RSNetwApp.Services.Services;
 using RSNetwApp.Api.AccessTokenProvider;
 using System;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace RSNetwApp.Api
 {
@@ -45,6 +46,8 @@ namespace RSNetwApp.Api
                     Title = "RSNetw Api"
                 });
             });
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             const string signingSecurityKey = "0d5b3235a8b403c3dab9c3f4f65c07fcalskd234n1k41230";
             var signingKey = new SigningSymmetricKey(signingSecurityKey);

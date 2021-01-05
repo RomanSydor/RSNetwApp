@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RSNetwApp.Domain\RSNetwApp.Domain.csproj" />
     <ProjectReference Include="..\RSNetwApp.Repositories\RSNetwApp.Repositories.csproj" />
   </ItemGroup>

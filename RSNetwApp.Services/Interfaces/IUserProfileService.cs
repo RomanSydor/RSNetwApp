@@ -1,4 +1,5 @@
 ﻿using RSNetwApp.Domain.Entities;
+using RSNetwApp.Domain.Entities.EntitiesVM;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,8 +7,8 @@ namespace RSNetwApp.Services.Interfaces
 {
     public interface IUserProfileService
     {
-        Task<IEnumerable<UserProfileEntity>> GetUserProfileEntitiesAsync();
+        Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync();
         Task<bool> CreateUserProfileAsync(UserProfileEntity userProfile);
-        Task<UserProfileEntity> GetUserProfileByUsernameAsync(string username);
+        Task<UserProfileVM> GetUserProfileByUsernameAsync(string username);
     }
 }
