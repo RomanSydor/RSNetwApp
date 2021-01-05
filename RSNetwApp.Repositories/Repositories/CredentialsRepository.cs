@@ -18,7 +18,7 @@ namespace RSNetwApp.Repositories.Repositories
         public async Task<CredentialsEntity> GetCredentialsAsync(AuthenticateRequest authenticate)
         {
             var credentials = await _db.CredentialsEntities
-                                    .SingleOrDefaultAsync(x => x.Username == authenticate.Login && x.Password == authenticate.Password);
+                                    .SingleOrDefaultAsync(x => x.Username == authenticate.Username && x.Password == authenticate.Password);
             return credentials;
         }
     }
