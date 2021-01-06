@@ -17,7 +17,7 @@ namespace RSNetwApp.Domain.Entities
         public string Password { get; set; }
 
         [Required]
-        public RolesEnum Role { get; set; }
+        public Roles Role { get; set; }
 
 
         public UserProfileEntity UserProfile { get; set; }

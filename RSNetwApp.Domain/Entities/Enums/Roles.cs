@@ -1,9 +1,9 @@
 ﻿namespace RSNetwApp.Domain.Entities.Enums
 {
-    public enum RolesEnum
+    public enum Roles
     {
         User,
+        Moderator,
         Admin,
-        Moderator
     }
 }
