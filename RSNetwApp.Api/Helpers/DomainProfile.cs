@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RSNetwApp.Domain.Entities;
 using RSNetwApp.Domain.Entities.EntitiesVM;
+using RSNetwApp.Domain.Models;
 
 namespace RSNetwApp.Api.Helpers
 {
@@ -13,6 +14,17 @@ namespace RSNetwApp.Api.Helpers
                 .ForMember(u => u.FirstName, opt => opt.MapFrom(m => m.FirstName))
                 .ForMember(u => u.LastName, opt => opt.MapFrom(m => m.LastName))
                 .ForMember(u => u.Age, opt => opt.MapFrom(m => m.Age));
+
+            CreateMap<RegistrationModel, UserProfileEntity>()
+                .AfterMap((src, dest) => {
+                    dest.FirstName = src.FirstName;
+                    dest.LastName = src.LastName;
+                    dest.Age = src.Age;
+                    dest.Credentials = new CredentialsEntity();
+                    dest.Credentials.Username = src.Username;
+                    dest.Credentials.Password = src.Password;
+                });
+                
         }
     }
 }

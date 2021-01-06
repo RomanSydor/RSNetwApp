@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RSNetwApp.Repositories.Contexts;
 
 namespace RSNetwApp.Repositories.Migrations
 {
     [DbContext(typeof(RSNetwDbContext))]
-    partial class RSNetwDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210106111340_RolesUpd")]
+    partial class RolesUpd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

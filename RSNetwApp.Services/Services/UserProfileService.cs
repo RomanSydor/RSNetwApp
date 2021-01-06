@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RSNetwApp.Domain.Entities;
 using RSNetwApp.Domain.Entities.EntitiesVM;
+using RSNetwApp.Domain.Models;
 using RSNetwApp.Repositories.Interfaces;
 using RSNetwApp.Services.Interfaces;
 using System.Collections.Generic;
@@ -19,9 +20,11 @@ namespace RSNetwApp.Services.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateUserProfileAsync(UserProfileEntity userProfile)
+        public async Task<bool> CreateUserProfileAsync(RegistrationModel registration)
         {
-            return await _repository.CreateUserProfileAsync(userProfile);
+            var profile = _mapper.Map<UserProfileEntity>(registration);
+            profile.Credentials.Role = 0;
+            return await _repository.CreateUserProfileAsync(profile);
         }
 
         public async Task<UserProfileVM> GetUserProfileByUsernameAsync(string username)

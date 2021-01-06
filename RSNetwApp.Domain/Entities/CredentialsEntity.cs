@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RSNetwApp.Domain.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RSNetwApp.Domain.Entities
@@ -16,7 +17,7 @@ namespace RSNetwApp.Domain.Entities
         public string Password { get; set; }
 
         [Required]
-        public string Role { get; set; }
+        public RolesEnum Role { get; set; }
 
 
         public UserProfileEntity UserProfile { get; set; }

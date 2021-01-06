@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RSNetwApp.Domain.Entities;
+using RSNetwApp.Domain.Models;
 using RSNetwApp.Services.Interfaces;
 using System.Threading.Tasks;
 
@@ -27,9 +28,9 @@ namespace RSNetwApp.Api.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("Create/")]
-        public async Task<IActionResult> CreateUserProfile(UserProfileEntity userProfile)
+        public async Task<IActionResult> CreateUserProfile(RegistrationModel registration)
         {
-            var result = await _service.CreateUserProfileAsync(userProfile);
+            var result = await _service.CreateUserProfileAsync(registration);
             if (result)
             {
                 return Ok();
