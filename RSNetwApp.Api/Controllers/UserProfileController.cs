@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RSNetwApp.Domain.Entities;
 using RSNetwApp.Domain.Models;
 using RSNetwApp.Services.Interfaces;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RSNetwApp.Api.Controllers
@@ -19,6 +19,7 @@ namespace RSNetwApp.Api.Controllers
         }
 
         [HttpGet]
+        [Route("Profiles/")]
         public async Task<IActionResult> GetUserProfiles() 
         {
             var profiles = await _service.GetUserProfileEntitiesAsync();
@@ -47,5 +48,30 @@ namespace RSNetwApp.Api.Controllers
             return Ok(profile);
         }
 
+        [HttpGet]
+        [Route("Details/")]
+        public async Task<IActionResult> ProfileDetails(string username) 
+        {
+            var profile = await _service.GetUserProfileByUsernameAsync(username);
+            return Ok(profile);
+        }
+
+        [HttpGet]
+        [Route("Details/Moderator/")]
+        [Authorize(Roles = "1")]
+        public async Task<IActionResult> ModeratorProfileDetails(string username)
+        {
+            var profile = await _service.AdminGetUserProfileByUsernameAsync(username);
+            return Ok(profile);
+        }
+
+        [HttpGet]
+        [Route("Details/Admin/")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> AdminProfileDetails(string username)
+        {
+            var profile = await _service.AdminGetUserProfileByUsernameAsync(username);
+            return Ok(profile);
+        }
     }
 }

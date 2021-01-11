@@ -36,7 +36,8 @@ namespace RSNetwApp.Api.Controllers
 
             var claims = new Claim[]
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, credentials.Username)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, credentials.Username),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, ((int)credentials.Role).ToString())
             };
 
             var token = new JwtSecurityToken(

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RSNetwApp.Domain.Entities;
+using RSNetwApp.Domain.Entities.AdminsVM;
 using RSNetwApp.Domain.Entities.EntitiesVM;
 using RSNetwApp.Domain.Models;
 using RSNetwApp.Repositories.Interfaces;
@@ -31,7 +32,16 @@ namespace RSNetwApp.Services.Services
         {
             var profile = await _repository.GetUserProfileByUsernameAsync(username);
             var profileVM = _mapper.Map<UserProfileVM>(profile);
+
             return profileVM;
+        }
+
+        public async Task<UserProfileAVM> AdminGetUserProfileByUsernameAsync(string username)
+        {
+            var profile = await _repository.GetUserProfileByUsernameAsync(username);
+            var profileAVM = _mapper.Map<UserProfileAVM>(profile);
+
+            return profileAVM;
         }
 
         public async Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync()
