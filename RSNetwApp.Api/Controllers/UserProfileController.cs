@@ -58,7 +58,7 @@ namespace RSNetwApp.Api.Controllers
 
         [HttpGet]
         [Route("Details/Moderator/")]
-        [Authorize(Roles = "1")]
+        [Authorize(Roles = "1, 2")]
         public async Task<IActionResult> ModeratorProfileDetails(string username)
         {
             var profile = await _service.AdminGetUserProfileByUsernameAsync(username);
