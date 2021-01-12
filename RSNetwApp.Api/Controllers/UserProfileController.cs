@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RSNetwApp.Domain.Models;
 using RSNetwApp.Services.Interfaces;
-using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RSNetwApp.Api.Controllers
@@ -31,12 +31,24 @@ namespace RSNetwApp.Api.Controllers
         [Route("Create/")]
         public async Task<IActionResult> CreateUserProfile(RegistrationModel registration)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.SelectMany(x => x.Value.Errors)
+                          .ToList();
+
+                var error = string.Empty;
+                foreach (var item in errors)
+                {
+                    error += $"{item.ErrorMessage} \n";   
+                }
+                return BadRequest(error);
+            }
             var result = await _service.CreateUserProfileAsync(registration);
             if (result)
             {
                 return Ok();
             }
-            return BadRequest();
+            return BadRequest("Username is already exists.");
         }
 
         [HttpGet]
