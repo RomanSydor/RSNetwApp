@@ -30,7 +30,6 @@ namespace RSNetwApp.Api.Helpers
                     dest.Age = src.Age;
                     dest.Credentials = new CredentialsEntity();
                     dest.Credentials.Username = src.Username;
-                    dest.Credentials.Password = src.Password;
                 });
                 
         }

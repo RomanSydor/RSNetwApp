@@ -15,6 +15,7 @@ using RSNetwApp.Api.AccessTokenProvider;
 using System;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using RSNetwApp.Services.MD5Hash;
 
 namespace RSNetwApp.Api
 {
@@ -88,6 +89,7 @@ namespace RSNetwApp.Api
             services.AddScoped<IUserProfileService, UserProfileService>();
             services.AddScoped<ICredentialsRepository, CredentialsRepository>();
             services.AddScoped<ICredentialsService, CredentialsService>();
+            services.AddScoped<MD5Hasher>();
 
         }
 

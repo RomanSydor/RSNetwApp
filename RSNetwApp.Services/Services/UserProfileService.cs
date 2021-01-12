@@ -6,6 +6,7 @@ using RSNetwApp.Domain.Entities.EntitiesVM;
 using RSNetwApp.Domain.Models;
 using RSNetwApp.Repositories.Interfaces;
 using RSNetwApp.Services.Interfaces;
+using RSNetwApp.Services.MD5Hash;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,16 +16,19 @@ namespace RSNetwApp.Services.Services
     {
         private readonly IUserProfileRepository _repository;
         private readonly IMapper _mapper;
-        public UserProfileService(IUserProfileRepository repository, IMapper mapper)
+        private readonly MD5Hasher _hasher;
+        public UserProfileService(IUserProfileRepository repository, IMapper mapper, MD5Hasher hasher)
         {
             _repository = repository;
             _mapper = mapper;
+            _hasher = hasher;
         }
 
         public async Task<bool> CreateUserProfileAsync(RegistrationModel registration)
         {
             var profile = _mapper.Map<UserProfileEntity>(registration);
             profile.Credentials.Role = 0;
+            profile.Credentials.Password = _hasher.HashPassword(registration.Password);
             return await _repository.CreateUserProfileAsync(profile);
         }
 
