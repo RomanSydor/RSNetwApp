@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using RSNetwApp.Domain.Entities;
+using RSNetwApp.Domain.ViewModels;
 using RSNetwApp.Repositories.Interfaces;
 using RSNetwApp.Services.Interfaces;
 using System.Collections.Generic;
@@ -16,6 +17,14 @@ namespace RSNetwApp.Services.Services
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync()
+        {
+            var profilesQuery = _repository.GetUserProfileEntities();
+            var profilesList = await profilesQuery.ToListAsync();
+            var profiles = _mapper.Map<List<UserProfileVM>>(profilesList);
+            return profiles;
         }
     }
 }

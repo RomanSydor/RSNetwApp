@@ -17,34 +17,10 @@ namespace RSNetwApp.Repositories.Repositories
             _db = db;
         }
 
-        //public async Task<bool> CreateUserProfileAsync(UserProfileEntity userProfile)
-        //{
-        //    try
-        //    {
-        //        _db.UserProfileEntities.Add(userProfile);
-        //        await _db.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return false;
-        //    }
-        //}
-
-        //public async Task<UserProfileEntity> GetUserProfileByUsernameAsync(string username)
-        //{
-        //    var profile = await _db.UserProfileEntities
-        //                     .Include(x => x.Credentials)
-        //                     .SingleOrDefaultAsync(x => x.Credentials.Username == username);
-        //    return profile;
-        //}
-
-        //public IQueryable<UserProfileEntity> GetUserProfileEntitiesAsQueryable()
-        //{
-        //    var query = _db.UserProfileEntities
-        //        .Include(x => x.Credentials)
-        //        .AsQueryable();
-        //    return query;
-        //}
+        public IQueryable<UserProfileEntity> GetUserProfileEntities()
+        {
+            var query = _db.UserProfileEntities.AsQueryable();
+            return query;
+        }
     }
 }

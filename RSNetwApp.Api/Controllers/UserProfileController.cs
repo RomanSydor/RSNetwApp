@@ -17,13 +17,13 @@ namespace RSNetwApp.Api.Controllers
             _service = service;
         }
 
-        //[HttpGet]
-        //[Route("Profiles/")]
-        //public async Task<IActionResult> GetUserProfiles() 
-        //{
-        //    var profiles = await _service.GetUserProfileEntitiesAsync();
-        //    return Ok(profiles);
-        //}
+        [HttpGet]
+        [Route("/profiles")]
+        public async Task<IActionResult> GetUserProfiles()
+        {
+            var profiles = await _service.GetUserProfileEntitiesAsync();
+            return Ok(profiles);
+        }
 
         //[HttpGet]
         //[Route("CurrentProfile/")]

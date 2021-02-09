@@ -6,6 +6,6 @@ namespace RSNetwApp.Repositories.Interfaces
 {
     public interface IUserProfileRepository
     {
-
+        IQueryable<UserProfileEntity> GetUserProfileEntities();
     }
 }

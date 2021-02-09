@@ -96,13 +96,14 @@ namespace RSNetwApp.Api.Controllers
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            string callbackUrl = _callbackUrlHelper.CreateCallbackUrl(user.Id, token, "ConfirmEmail");
+            //string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //string callbackUrl = _callbackUrlHelper.CreateCallbackUrl(user.Id, token, "ConfirmEmail");
 
-            await _emailHelper.ConfirmRegistrationSendRuMail(callbackUrl, user.UserName, user.Email);
+            //await _emailHelper.ConfirmRegistrationSendRuMail(callbackUrl, user.UserName, user.Email);
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
+
         [HttpGet]
         [Route("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
