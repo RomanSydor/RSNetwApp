@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RSNetwApp.Domain;
 using Microsoft.AspNetCore.Http;
+using RSNetwApp.Api.Helpers;
 
 namespace RSNetwApp.Api.Controllers
 {
@@ -21,11 +22,15 @@ namespace RSNetwApp.Api.Controllers
     {
         private readonly UserManager<UserProfileEntity> _userManager;
         private readonly IConfiguration _config;
+        private readonly CallbackUrlHelper _callbackUrlHelper;
+        private readonly EmailHelper _emailHelper;
 
-        public AuthController(UserManager<UserProfileEntity> userManager, IConfiguration config)
-        {
+        public AuthController(UserManager<UserProfileEntity> userManager, IConfiguration config, CallbackUrlHelper callbackUrlHelper, EmailHelper emailHelper)
+        { 
             _userManager = userManager;
             _config = config;
+            _callbackUrlHelper = callbackUrlHelper;
+            _emailHelper = emailHelper;
         }
 
         [HttpPost]
@@ -91,13 +96,81 @@ namespace RSNetwApp.Api.Controllers
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
-            //TODO Add email sender.
-            //string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //string callbackUrl = _callbackUrlHelper.CreateCallbackUrl(user.Id, token, "ConfirmEmail");
+            string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            string callbackUrl = _callbackUrlHelper.CreateCallbackUrl(user.Id, token, "ConfirmEmail");
 
-            //await _emailHelper.ConfirmRegistrationSendRuMail(callbackUrl, user.UserName, user.Email);
+            await _emailHelper.ConfirmRegistrationSendRuMail(callbackUrl, user.UserName, user.Email);
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
+        [HttpGet]
+        [Route("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User wasn't found!" });
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Something went wrong!" });
+
+            return Ok(new Response { Status = "Success", Message = "Email confirmed successfully!" });
+        }
+
+        [HttpPost]
+        [Route("forgot-pass")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(viewModel.Email);
+                if (user == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User wasn't found!" });
+                }
+
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Email isn't confirmed" });
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                string callbackUrl = _callbackUrlHelper.CreateCallbackUrl(user.Id, token, "ResetPassword");
+
+                try
+                {
+                    await _emailHelper.SetPasswordSendRuMail(callbackUrl, viewModel);
+                }
+                catch (Exception exception)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = exception.Message });
+                }
+            }
+
+            return Ok(new Response { Status = "Success", Message = "Please, check your email to reset your password." });
+        }
+
+        [HttpPost]
+        [Route("reset-pass")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(viewModel.UserId);
+                if (user == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User wasn't found!" });
+                }
+
+                var result = await _userManager.ResetPasswordAsync(user, viewModel.Token, viewModel.Password);
+                if (result.Succeeded)
+                {
+                    return Ok(new Response { Status = "Success", Message = "Password successfully changed!" });
+                }
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Something went wrong!" });
+        }
     }
+
 }

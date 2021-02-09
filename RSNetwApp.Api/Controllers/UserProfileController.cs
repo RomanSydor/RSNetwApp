@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RSNetwApp.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user-profile")]
     [ApiController]
     [Authorize]
     public class UserProfileController : ControllerBase

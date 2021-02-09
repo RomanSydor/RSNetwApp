@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using RSNetwApp.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using RSNetwApp.Api.Helpers;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace RSNetwApp.Api
 {
@@ -106,6 +108,9 @@ namespace RSNetwApp.Api
 
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddTransient<EmailHelper, EmailHelper>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<CallbackUrlHelper, CallbackUrlHelper>();
 
         }
 
