@@ -11,11 +11,13 @@ using RSNetwApp.Repositories.Repositories;
 using RSNetwApp.Repositories.Interfaces;
 using RSNetwApp.Services.Interfaces;
 using RSNetwApp.Services.Services;
-using RSNetwApp.Api.AccessTokenProvider;
 using System;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
-using RSNetwApp.Services.MD5Hash;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using RSNetwApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace RSNetwApp.Api
 {
@@ -35,9 +37,31 @@ namespace RSNetwApp.Api
 
             services.AddControllers();
 
-            services.AddDbContext<RSNetwDbContext>(options =>
-                                     options.UseSqlServer(
-                                         Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<RSNetwDbContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<UserProfileEntity, IdentityRole>()
+                .AddEntityFrameworkStores<RSNetwDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["JWT:ValidAudience"],
+                        ValidIssuer = Configuration["JWT:ValidIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                    };
+                });
 
             services.AddSwaggerGen(swagger =>
             {
@@ -73,38 +97,7 @@ namespace RSNetwApp.Api
                 });
             });
 
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            const string signingSecurityKey = "0d5b3235a8b403c3dab9c3f4f65c07fcalskd234n1k41230";
-            var signingKey = new SigningSymmetricKey(signingSecurityKey);
-            services.AddSingleton<IJwtSigningEncodingKey>(signingKey);
-
-
-            const string jwtSchemeName = "JwtBearer";
-            var signingDecodingKey = (IJwtSigningDecodingKey)signingKey;
-            services
-                .AddAuthentication(options => {
-                    options.DefaultAuthenticateScheme = jwtSchemeName;
-                    options.DefaultChallengeScheme = jwtSchemeName;
-                })
-                .AddJwtBearer(jwtSchemeName, jwtBearerOptions => {
-                    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = signingDecodingKey.GetKey(),
-
-                        ValidateIssuer = true,
-                        ValidIssuer = "RSApp",
-
-                        ValidateAudience = true,
-                        ValidAudience = "RSAppClient",
-
-                        ValidateLifetime = true,
-
-                        ClockSkew = TimeSpan.FromSeconds(5)
-                    };
-                });
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -113,9 +106,6 @@ namespace RSNetwApp.Api
 
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IUserProfileService, UserProfileService>();
-            services.AddScoped<ICredentialsRepository, CredentialsRepository>();
-            services.AddScoped<ICredentialsService, CredentialsService>();
-            services.AddScoped<MD5Hasher>();
 
         }
 
@@ -133,6 +123,8 @@ namespace RSNetwApp.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseAuthentication();
 
