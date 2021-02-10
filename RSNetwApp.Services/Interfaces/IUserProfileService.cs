@@ -8,5 +8,6 @@ namespace RSNetwApp.Services.Interfaces
     public interface IUserProfileService
     {
         Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync();
+        Task<UserProfileVM> GetUserProfileAsync(string username);
     }
 }

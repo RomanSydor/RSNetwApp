@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RSNetwApp.Domain.Entities;
 using RSNetwApp.Domain.ViewModels;
@@ -13,10 +14,12 @@ namespace RSNetwApp.Services.Services
     {
         private readonly IUserProfileRepository _repository;
         private readonly IMapper _mapper;
-        public UserProfileService(IUserProfileRepository repository, IMapper mapper)
+        private readonly UserManager<UserProfileEntity> _userManager;
+        public UserProfileService(IUserProfileRepository repository, IMapper mapper, UserManager<UserProfileEntity> userManager)
         {
             _repository = repository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync()
@@ -25,6 +28,12 @@ namespace RSNetwApp.Services.Services
             var profilesList = await profilesQuery.ToListAsync();
             var profiles = _mapper.Map<List<UserProfileVM>>(profilesList);
             return profiles;
+        }
+
+        public async Task<UserProfileVM> GetUserProfileAsync(string username) 
+        {
+            var profile = await _userManager.FindByNameAsync(username);
+            return _mapper.Map<UserProfileVM>(profile);
         }
     }
 }
