@@ -16,7 +16,7 @@ namespace RSNetwApp.Api.Controllers
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileService _service;
-        
+
         public UserProfileController(IUserProfileService service)
         {
             _service = service;
@@ -49,7 +49,17 @@ namespace RSNetwApp.Api.Controllers
         {
             var profile = await _service.GetUserProfileAsync(username);
             if (profile == null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Something went wrond" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Profile wasn't found!" });
+            return Ok(profile);
+        }
+
+        [HttpPost]
+        [Route("change-username")]
+        public async Task<IActionResult> ChangeUsername(string newUsername)
+        {
+            var profile = await _service.ChangeUsernameAsync(User.Identity.Name, newUsername);
+            if (profile == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Something went wrong" });
             return Ok(profile);
         }
     }

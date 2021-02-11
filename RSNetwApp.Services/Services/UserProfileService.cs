@@ -35,5 +35,18 @@ namespace RSNetwApp.Services.Services
             var profile = await _userManager.FindByNameAsync(username);
             return _mapper.Map<UserProfileVM>(profile);
         }
+
+        public async Task<UserProfileVM> ChangeUsernameAsync(string currentUsername, string newUsername)
+        {
+            var newUsernameCheck = _userManager.FindByNameAsync(newUsername);
+            if (newUsernameCheck != null)
+            {
+                return null;
+            }
+            var profile = await _userManager.FindByNameAsync(currentUsername);
+            profile.UserName = newUsername;
+            await _userManager.UpdateAsync(profile);
+            return _mapper.Map<UserProfileVM>(profile);
+        }
     }
 }

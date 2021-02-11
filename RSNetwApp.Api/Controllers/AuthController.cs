@@ -121,11 +121,11 @@ namespace RSNetwApp.Api.Controllers
 
         [HttpPost]
         [Route("forgot-pass")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto viewModel)
+        public async Task<IActionResult> ForgotPassword(EmailUrlSenderDto model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(viewModel.Email);
+                var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user == null)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User wasn't found!" });
@@ -141,7 +141,7 @@ namespace RSNetwApp.Api.Controllers
 
                 try
                 {
-                    await _emailHelper.SetPasswordSendRuMail(callbackUrl, viewModel);
+                    await _emailHelper.SetPasswordSendRuMail(callbackUrl, model);
                 }
                 catch (Exception exception)
                 {

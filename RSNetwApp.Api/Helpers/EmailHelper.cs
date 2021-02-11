@@ -28,10 +28,10 @@ namespace RSNetwApp.Api.Helpers
             return _emailSender.SendEmailAsync(email, "Confirm your email", html);
         }
 
-        public async Task SetPasswordSendRuMail(string callbackUrl, ForgotPasswordDto viewModel)
+        public async Task SetPasswordSendRuMail(string callbackUrl, EmailUrlSenderDto model)
         {
             string html = $"Please, reset your password <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>.";
-            await _emailSender.SendEmailAsync(viewModel.Email, "Password reset", html);
+            await _emailSender.SendEmailAsync(model.Email, "Password reset", html);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace RSNetwApp.Services.Interfaces
     {
         Task<IEnumerable<UserProfileVM>> GetUserProfileEntitiesAsync();
         Task<UserProfileVM> GetUserProfileAsync(string username);
+        Task<UserProfileVM> ChangeUsernameAsync(string currentUsername, string newUsername);
     }
 }

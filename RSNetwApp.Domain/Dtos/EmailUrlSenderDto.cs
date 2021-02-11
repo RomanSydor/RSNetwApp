@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RSNetwApp.Domain.Dtos
 {
-    public class ForgotPasswordDto
+    public class EmailUrlSenderDto
     {
         [Required(ErrorMessage = "Field is required!")]
         [EmailAddress(ErrorMessage = "Invalid input!")]
